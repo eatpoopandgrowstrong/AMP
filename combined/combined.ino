@@ -120,6 +120,7 @@ void NavLights(){
       x=0;
       
     }
+    //RESET
     button1=0;
   }
 }
@@ -140,6 +141,7 @@ void LandingGear(){
       digitalWrite(GearUp,HIGH);
       digitalWrite(GearDown,LOW);
     }
+    //RESET
     button2=0;
 
   }
