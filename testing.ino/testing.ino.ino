@@ -2,6 +2,7 @@
 
 #include <IRremote.h>//IRremote for the remote
 #include <Servo.h>   //Servo for the servomotors
+#include <Stepper.h>
 
 //FUNCTIONS
 void Decoder();
