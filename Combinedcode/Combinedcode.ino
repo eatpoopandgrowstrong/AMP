@@ -23,6 +23,7 @@ int val;
 
 void setup()
 {
+  Serial.begin(9600);
    myservo.attach(7);
 }
  
@@ -31,7 +32,7 @@ void loop()
   val = analogRead(potpin);
   val = map(val, 0, 1023, 0, 180);
   myservo.write(val);
-  delay(15);
+ 
   // read analog value from the potentiometer
   int val = analogRead(joystick);
  
@@ -47,31 +48,36 @@ void loop()
   else
   {
     // move the motor in the first direction
-    while (val >= 523)
+    if(val >= 523)
     {
+      Serial.println(val);                            //PRINT THE VALUE OF 'VAL'
+      
       // map the speed between 5 and 500 rpm
       int speed_ = map(val, 523, 1023, 5, 500);
       // set motor speed
       stepper.setSpeed(speed_);
  
       // move the motor (1 step)
-      stepper.step(1);
+      stepper.step(5);
  
       val = analogRead(joystick);
+      Serial.println(val);                            //PRINT THE VALUE OF 'VAL'
     }
  
     // move the motor in the other direction
-    while (val <= 500)
+    if (val <= 500)
     {
+      Serial.println(val);                            //PRINT THE VALUE OF 'VAL'
       // map the speed between 5 and 500 rpm
       int speed_ = map(val, 500, 0, 5, 500);
       // set motor speed
       stepper.setSpeed(speed_);
  
       // move the motor (1 step)
-      stepper.step(-1);
+      stepper.step(-5);
  
       val = analogRead(joystick);
+      Serial.println(val);
     }
  
   }
