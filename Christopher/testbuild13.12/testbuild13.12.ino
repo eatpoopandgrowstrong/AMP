@@ -7,6 +7,10 @@
 void Decoder();
 void NavLights();
 void LandingGear();
+void Elevator();
+void Ailerons();
+
+
 
 #define IR1 16724175  //IR1 is for NavLights
 #define IR2 16718055  //IR2 is to toggle the landing gear
@@ -21,6 +25,10 @@ const int button = 3;
 const int GearUp = 8;
 const int GearDown = 9;
 const int IRpin = 10;
+
+const int JoystickXAxis = A14;
+const int JoystickYAxis = A15;
+
 
 //millis
 
@@ -42,7 +50,7 @@ int button7 = 0;
 IRrecv irrecv(IRpin);
 decode_results results;
 
-//SERVOMOTOR
+//LANDING GEAR
 Servo LandingGearServo;
 Servo LandingGearCoverServo;
 
@@ -50,11 +58,23 @@ int LandingGearCoverStatus = 0;
 unsigned long PreviousGearCoverMillis = 0;
 unsigned long GearCoverInterval = 1000;       //interval between cover and the landing gear and vice versa
 
-
 int LandingGearStatus;
 
 int landing = 0;
 
+//ELEVATOR
+Servo ElevatorServo;
+
+int XAxisRaw;
+int XAxisMapped;
+
+
+//AILERONS
+Servo LeftAileronServo;
+Servo RightAileronServo;
+
+int YAxisRaw;
+int YAxisMapped;
 
 void setup() {
   // put your setup code here, to run once:
@@ -69,7 +89,7 @@ void setup() {
   irrecv.enableIRIn();
 
 
-  //SERVO
+  //LANDING GEAR SERVO
   LandingGearServo.attach(6);
   LandingGearCoverServo.attach(7);
 
@@ -80,6 +100,14 @@ void setup() {
 
   digitalWrite(GearUp, HIGH);
   digitalWrite(GearDown, LOW);
+
+  //ELEVATOR SERVO
+  ElevatorServo.attach(8);
+
+  //AILERON SERVOS
+  LeftAileronServo.attach(9);
+  RightAileronServo.attach(10);
+
 }
 
 void loop() {
@@ -87,9 +115,14 @@ void loop() {
 
   CurrentMillis = millis();
 
+  //If there end up being too many functions and the rate at which the MCU processes slows down, perhaps split the latency important functions such as control surfaces to another board?
+  //Run two at once?
+    
   Decoder();
   NavLights();
   LandingGear();
+  Elevator();
+  Ailerons();
 
 }
 
@@ -98,10 +131,11 @@ void loop() {
 
 
 void Decoder() {
+
   if (irrecv.decode(&results)) {
     //Serial.println(results.value,DEC);
     if (results.value == IR1) {
-      Serial.println("Button 1 was pressed");     
+      Serial.println("Button 1 was pressed");
       button1 = 1;
     }
     if (results.value == IR2) {
@@ -152,111 +186,113 @@ void LandingGear() {
 
   if (button2 == 1) {
     /*
-    Landing Gear is being extended down
-    Note: this blob of spaghetti code is in need of some serious refactoring, consider using switch?
-    There are 3 parts to the gear landing sequence:
-    
-    Gear cover is brought down and some time is given for it to be brought down
-    Landing gear cover is brought down and some time is given for it to be brought down
-    Gear Cover is brought up and some time is given for it to be brought up
- 
-    The reverse happens for when the landing gear is brought up:
+      Landing Gear is being extended down
+      Note: this blob of spaghetti code is in need of some serious refactoring, consider using switch?
+      There are 3 parts to the gear landing sequence:
 
-    Gear cover down, wait
-    Landing gear goes up, wait
-    Gear cover up, wait
+      Gear cover is brought down and some time is given for it to be brought down
+      Landing gear cover is brought down and some time is given for it to be brought down
+      Gear Cover is brought up and some time is given for it to be brought up
 
-    Perhaps reuse the same gear cover up/down sequence, but manipulate a variable for the position/sequencing of the landing gear.
-    
+      The reverse happens when the landing gear is brought up:
+
+      Gear cover down, wait
+      Landing gear goes up, wait
+      Gear cover up, wait
+
+      Perhaps reuse the same gear cover up/down sequence, but manipulate a variable for the position/sequencing of the landing gear.
+
     */
 
-    
-    switch (LandingGearStatus){
-      
+
+    switch (LandingGearStatus) {
+
       case 1:
-      
+
         LandingGearCoverServo.write(0);
         PreviousGearCoverMillis = CurrentMillis;
         LandingGearStatus = 2;
-      
-      break;
+
+        break;
 
       case 2:
 
-        if(CurrentMillis-PreviousGearCoverMillis >= GearCoverInterval){
+        if (CurrentMillis - PreviousGearCoverMillis >= GearCoverInterval) {
 
 
-          if(landing==0){
+          if (landing == 0) {
 
             LandingGearServo.write(0);
-            
+            landing = 1;
+
           }
-          else{
+          else {
 
             LandingGearServo.write(90);
-            
+            landing = 0;
+
           }
-          
+
           PreviousGearCoverMillis = CurrentMillis;
           LandingGearStatus = 3;
-          
+
         }
-      
-      break;
+
+        break;
 
       case 3:
-      
-        if(CurrentMillis-PreviousGearCoverMillis >= GearCoverInterval){
-  
-            LandingGearCoverServo.write(0);
-            button2=0;
-            LandingGearStatus = 1;
-            
+
+        if (CurrentMillis - PreviousGearCoverMillis >= GearCoverInterval) {
+
+          LandingGearCoverServo.write(0);
+          button2 = 0;
+          LandingGearStatus = 1;
+
         }
 
-      
-      break;
+
+        break;
     }
 
 
 
 
 
+    /*
 
-    
     if (landing == 0) {
 
-      if(LandingGearCoverStatus==0){
-        
+      if (LandingGearCoverStatus == 0) {
+
         LandingGearCoverServo.write(0);             //Landing gear cover is being brought down
         PreviousGearCoverMillis = CurrentMillis;    //start the timer
         LandingGearCoverStatus = 1;
-        
+
       }
-      else{
+      else {
 
-        if(CurrentMillis-PreviousGearCoverMillis >= GearCoverInterval){
+        if (CurrentMillis - PreviousGearCoverMillis >= GearCoverInterval) {
 
 
-          
+
         }
-      //insert timer code here, TBD
-      
-      LandingGearServo.write(63);             //Landing gear is brought down
-      landing = 1;
-      digitalWrite(GearUp, LOW);
-      digitalWrite(GearDown, HIGH);
+        //insert timer code here, TBD
 
-      //insert timer code here, TBD
+        LandingGearServo.write(63);             //Landing gear is brought down
+        landing = 1;
+        digitalWrite(GearUp, LOW);
+        digitalWrite(GearDown, HIGH);
 
-      LandingGearCoverServo.write(90);        //Landing gear cover is being brought up once the landing gear has been deployed
-    
-      //reset the button
-      button2 = 0;
-        
+        //insert timer code here, TBD
+
+        LandingGearCoverServo.write(90);        //Landing gear cover is being brought up once the landing gear has been deployed
+
+        //reset the button
+        button2 = 0;
+
       }
 
-     
+
     }
 
 
@@ -281,7 +317,26 @@ void LandingGear() {
 
     }
 
-
+  */
   }
+
+}
+
+void Elevator (void){
+
+  XAxisRaw = analogRead(JoystickXAxis);
+  XAxisMapped = map(XAxisRaw, 0 , 1023, 25, 155);
+
+  ElevatorServo.write(XAxisMapped);
+  
+}
+
+void Ailerons (void){
+  
+  YAxisRaw = analogRead(JoystickYAxis);
+  YAxisMapped = map(YAxisRaw, 0, 1023, 35, 145);
+
+  LeftAileronServo.write(YAxisMapped);
+  RightAileronServo.write(YAxisMapped);
 
 }
