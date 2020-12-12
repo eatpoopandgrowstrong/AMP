@@ -1,7 +1,13 @@
 //LIBRARIES
 
-#include <IRremote.h>//IRremote for the remote
-#include <Servo.h>   //Servo for the servomotors
+#include <IRremote.h>                 //IRremote for the remote
+#include <Servo.h>                    //Servo for the servomotors
+#include <DHT.h>                      //DHT library for the temperature/humidity sensor
+#include <DHT_U.h>
+#include <Wire.h>                     //I2C LIBRARY
+#include <LiquidCrystal_I2C.h>        //LCD Library
+
+LiquidCrystal_I2C lcd(0x3F,16,2);     //I2C address is 0x3F, the LCD has 2 rows of 16 columns or characters
 
 //FUNCTIONS
 void Decoder();
@@ -9,9 +15,10 @@ void NavLights();
 void LandingGear();
 void Elevator();
 void Ailerons();
+void Spoilers();
 
 
-
+//DEFINING IR NUMBERS
 #define IR1 16724175  //IR1 is for NavLights
 #define IR2 16718055  //IR2 is to toggle the landing gear
 #define IR3 16743045  //IR3 is for 
@@ -58,7 +65,7 @@ int LandingGearCoverStatus = 0;
 unsigned long PreviousGearCoverMillis = 0;
 unsigned long GearCoverInterval = 1000;       //interval between cover and the landing gear and vice versa
 
-int LandingGearStatus;
+int LandingGearStatus = 1;
 
 int landing = 0;
 
@@ -117,12 +124,17 @@ void loop() {
 
   //If there end up being too many functions and the rate at which the MCU processes slows down, perhaps split the latency important functions such as control surfaces to another board?
   //Run two at once?
-    
+
+  //Time sensitive: (Would prefer to be as close to the millis?)
+  //To test individually, simply comment out the other functions
+  LandingGear();
+
+
   Decoder();
   NavLights();
-  LandingGear();
   Elevator();
   Ailerons();
+  Spoilers();
 
 }
 
@@ -202,6 +214,8 @@ void LandingGear() {
 
       Perhaps reuse the same gear cover up/down sequence, but manipulate a variable for the position/sequencing of the landing gear.
 
+      Once this is tested, we can move onto doing multiple, such as the nose and the fuselage landing gears.
+
     */
 
 
@@ -260,7 +274,7 @@ void LandingGear() {
 
     /*
 
-    if (landing == 0) {
+      if (landing == 0) {
 
       if (LandingGearCoverStatus == 0) {
 
@@ -293,11 +307,11 @@ void LandingGear() {
       }
 
 
-    }
+      }
 
 
-    //Landing Gear is being retracted up
-    else {
+      //Landing Gear is being retracted up
+      else {
 
       LandingGearCoverServo.write(0);        //Landing gear cover is being brought down
 
@@ -315,24 +329,24 @@ void LandingGear() {
       //reset the button
       button2 = 0;
 
-    }
+      }
 
-  */
+    */
   }
 
 }
 
-void Elevator (void){
+void Elevator (void) {
 
   XAxisRaw = analogRead(JoystickXAxis);
   XAxisMapped = map(XAxisRaw, 0 , 1023, 25, 155);
 
   ElevatorServo.write(XAxisMapped);
-  
+
 }
 
-void Ailerons (void){
-  
+void Ailerons (void) {
+
   YAxisRaw = analogRead(JoystickYAxis);
   YAxisMapped = map(YAxisRaw, 0, 1023, 35, 145);
 
@@ -340,3 +354,26 @@ void Ailerons (void){
   RightAileronServo.write(YAxisMapped);
 
 }
+
+void Spoilers (void){
+
+  
+  
+}
+
+/*
+    What we can do:
+    Flaps
+    Slats
+    Turbofans
+    Noah DHT11 sensor, heat or humidity
+    Engine fire extinguishing system
+    
+    LCD systems display
+    Ultrasonic distance sensor, anti-collision system
+
+    Military shit:
+    Mid air refueling 
+    
+    
+*/
