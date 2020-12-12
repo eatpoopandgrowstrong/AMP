@@ -50,6 +50,9 @@ int LandingGearCoverStatus = 0;
 unsigned long PreviousGearCoverMillis = 0;
 unsigned long GearCoverInterval = 1000;       //interval between cover and the landing gear and vice versa
 
+
+int LandingGearStatus;
+
 int landing = 0;
 
 
@@ -166,6 +169,59 @@ void LandingGear() {
     Perhaps reuse the same gear cover up/down sequence, but manipulate a variable for the position/sequencing of the landing gear.
     
     */
+
+    
+    switch (LandingGearStatus){
+      
+      case 1:
+      
+        LandingGearCoverServo.write(0);
+        PreviousGearCoverMillis = CurrentMillis;
+        LandingGearStatus = 2;
+      
+      break;
+
+      case 2:
+
+        if(CurrentMillis-PreviousGearCoverMillis >= GearCoverInterval){
+
+
+          if(landing==0){
+
+            LandingGearServo.write(0);
+            
+          }
+          else{
+
+            LandingGearServo.write(90);
+            
+          }
+          
+          PreviousGearCoverMillis = CurrentMillis;
+          LandingGearStatus = 3;
+          
+        }
+      
+      break;
+
+      case 3:
+      
+        if(CurrentMillis-PreviousGearCoverMillis >= GearCoverInterval){
+  
+            LandingGearCoverServo.write(0);
+            button2=0;
+            LandingGearStatus = 1;
+            
+        }
+
+      
+      break;
+    }
+
+
+
+
+
 
     
     if (landing == 0) {
