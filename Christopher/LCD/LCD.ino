@@ -2,7 +2,7 @@
 #include <LiquidCrystal_I2C.h> // Library for LCD
 
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 16, 2);
-//0X27 IS LCD ADDRESS IN HEX, THERE ARE 16 COLUMNS AND 2 ROWS IN THE LCD
+//0X3F IS LCD ADDRESS IN HEX, THERE ARE 16 COLUMNS AND 2 ROWS IN THE LCD
 void setup() {
   lcd.init(); //INITIALISE THE LCD
   lcd.backlight(); //SWITCH ON THE BACKLIGHT
