@@ -16,7 +16,7 @@ void LandingGear();
 void Elevator();
 void Ailerons();
 void Spoilers();
-
+void TemperatureHumidity();
 
 //DEFINING IR NUMBERS
 #define IR1 16724175  //IR1 is for NavLights
@@ -83,6 +83,14 @@ Servo RightAileronServo;
 int YAxisRaw;
 int YAxisMapped;
 
+//TEMPERATURE AND HUMIDITY
+
+#define DHTPIN 3
+#define DHTTYPE DHT11
+
+DHT_Unified dht(DHTPIN, DHTTYPE);
+uint32_t delayMS;
+
 void setup() {
   // put your setup code here, to run once:
 
@@ -102,8 +110,8 @@ void setup() {
 
   pinMode(GearUp, OUTPUT);
   pinMode(GearDown, OUTPUT);
-  LandingGearServo.write(153);
-  LandingGearCoverServo.write(90);
+  LandingGearServo.write(0);
+  LandingGearCoverServo.write(0);
 
   digitalWrite(GearUp, HIGH);
   digitalWrite(GearDown, LOW);
@@ -114,6 +122,10 @@ void setup() {
   //AILERON SERVOS
   LeftAileronServo.attach(9);
   RightAileronServo.attach(10);
+
+  //LCD
+  lcd.init();                           //Initialise the LCD
+  lcd.backlight();                      //Switch on the backlight
 
 }
 
@@ -135,7 +147,7 @@ void loop() {
   Elevator();
   Ailerons();
   Spoilers();
-
+  TemperatureHumidity();
 }
 
 
@@ -196,7 +208,7 @@ void NavLights() {
 
 void LandingGear() {
 
-  if (button2 == 1) {
+  //if (button2 == 1) {
     /*
       Landing Gear is being extended down
       Note: this blob of spaghetti code is in need of some serious refactoring, consider using switch?
@@ -258,7 +270,7 @@ void LandingGear() {
 
         if (CurrentMillis - PreviousGearCoverMillis >= GearCoverInterval) {
 
-          LandingGearCoverServo.write(0);
+          LandingGearCoverServo.write(90);
           button2 = 0;
           LandingGearStatus = 1;
 
@@ -332,7 +344,7 @@ void LandingGear() {
       }
 
     */
-  }
+  //}
 
 }
 
@@ -360,6 +372,12 @@ void Spoilers (void){
   
   
 }
+
+void TemperatureHumidity (void){
+
+}
+
+
 
 /*
     What we can do:
