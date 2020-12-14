@@ -208,7 +208,7 @@ void NavLights() {
 
 void LandingGear() {
 
-  //if (button2 == 1) {
+  if (button2 == 1) {
     /*
       Landing Gear is being extended down
       Note: this blob of spaghetti code is in need of some serious refactoring, consider using switch?
@@ -344,7 +344,7 @@ void LandingGear() {
       }
 
     */
-  //}
+  }
 
 }
 

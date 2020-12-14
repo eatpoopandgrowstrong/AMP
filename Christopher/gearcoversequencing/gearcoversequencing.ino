@@ -13,10 +13,11 @@ unsigned long PreviousGearCoverMillis;
 
 int landing = 0;
 
-int button 2 = 0;
+int button2 = 0;
 
 void setup(){
 
+    Serial.begin(9600);
     LandingGearServo.attach(6);
     LandingGearCoverServo.attach(7);
 
@@ -39,6 +40,7 @@ void LandingGear(){
         PreviousGearCoverMillis = CurrentMillis;
         LandingGearStatus = 2;
 
+        Serial.println(LandingGearStatus);
         break;
 
       case 2:
@@ -50,6 +52,7 @@ void LandingGear(){
 
             LandingGearServo.write(0);
             landing = 1;
+            
 
           }
           else {
@@ -63,7 +66,7 @@ void LandingGear(){
           LandingGearStatus = 3;
 
         }
-
+        Serial.println(LandingGearStatus);
         break;
 
       case 3:
@@ -76,7 +79,7 @@ void LandingGear(){
 
         }
 
-
+        Serial.println(LandingGearStatus);
         break;
     }
 
