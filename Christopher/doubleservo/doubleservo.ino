@@ -16,17 +16,24 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  ServoLeft.write(90);
-  ServoRight.write(90);
+  ServoLeft.write(180);
+  ServoRight.write(180);
 
-  delay(500);
+  delay(2000);
 
-  ServoLeft.write(0);
-  ServoRight.write(0);
+  //ServoLeft.write(115);
+  //ServoRight.write(115);
+  
+  //delay(2000);
 
-  delay(500);
+  //ServoLeft.write(180);
+  //ServoRight.write(180);
+  //delay(500);
+  
+  //ServoLeft.write(270);
+  //ServoRight.write(270);
 
-  delay(500);
+  //delay(500);
   
   
 
