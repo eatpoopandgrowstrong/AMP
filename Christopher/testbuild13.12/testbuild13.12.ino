@@ -91,6 +91,10 @@ int YAxisMapped;
 DHT_Unified dht(DHTPIN, DHTTYPE);
 uint32_t delayMS;
 
+//SPOILERS
+Servo LeftSpoilerServo1;
+Servo LeftSpoilerServo2;
+
 void setup() {
   // put your setup code here, to run once:
 
@@ -126,6 +130,13 @@ void setup() {
   //LCD
   lcd.init();                           //Initialise the LCD
   lcd.backlight();                      //Switch on the backlight
+
+  //SPOILERS
+
+  LeftSpoilerServo1.attach(11);
+  LeftSpoilerServo2.attach(12);
+  LeftSpoilerServo1.write(180);
+  LeftSpoilerServo2.write(180);
 
 }
 
@@ -369,7 +380,9 @@ void Ailerons (void) {
 
 void Spoilers (void){
 
-  
+  //if(Condition or button here){
+    //LeftSpoilerServo
+  //}
   
 }
 
