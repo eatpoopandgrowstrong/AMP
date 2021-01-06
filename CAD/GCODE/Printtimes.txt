@@ -1,2 +1,4 @@
 Spoiler arm: 10min 
 Spoiler Piece: 20min
+PropellerV3 : 2h42min
+Cone:30min
