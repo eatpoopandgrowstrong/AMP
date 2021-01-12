@@ -383,6 +383,10 @@ void Spoilers (void){
   //if(Condition or button here){
     //LeftSpoilerServo
   //}
+  if (button3 == 1) {
+    LeftSpoilerServo1
+    LeftSpoilerServo2
+  }
   
 }
 
