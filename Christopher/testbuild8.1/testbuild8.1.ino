@@ -5,9 +5,9 @@
 #include <DHT.h>                      //DHT library for the temperature/humidity sensor
 #include <DHT_U.h>
 #include <Wire.h>                     //I2C LIBRARY
-#include <LiquidCrystal_I2C.h>        //LCD Library
+//#include <LiquidCrystal_I2C.h>        //LCD Library
 
-LiquidCrystal_I2C lcd(0x3F,16,2);     //I2C address is 0x3F, the LCD has 2 rows of 16 columns or characters
+//LiquidCrystal_I2C lcd(0x3F,16,2);     //I2C address is 0x3F, the LCD has 2 rows of 16 columns or characters
 
 //FUNCTIONS
 void Decoder();
@@ -128,8 +128,8 @@ void setup() {
   RightAileronServo.attach(10);
 
   //LCD
-  lcd.init();                           //Initialise the LCD
-  lcd.backlight();                      //Switch on the backlight
+  //lcd.init();                           //Initialise the LCD
+  //lcd.backlight();                      //Switch on the backlight
 
   //SPOILERS
 
@@ -384,8 +384,8 @@ void Spoilers (void){
     //LeftSpoilerServo
   //}
   if (button3 == 1) {
-    LeftSpoilerServo1
-    LeftSpoilerServo2
+    //LeftSpoilerServo1
+    //LeftSpoilerServo2
   }
   
 }
