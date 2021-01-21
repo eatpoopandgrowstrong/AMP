@@ -5,9 +5,9 @@
 #include <DHT.h>                      //DHT library for the temperature/humidity sensor
 #include <DHT_U.h>
 #include <Wire.h>                     //I2C LIBRARY
-#include <LiquidCrystal_I2C.h>        //LCD Library
+//#include <LiquidCrystal_I2C.h>        //LCD Library
 
-LiquidCrystal_I2C lcd(0x3F,16,2);     //I2C address is 0x3F, the LCD has 2 rows of 16 columns or characters
+//LiquidCrystal_I2C lcd(0x3F,16,2);     //I2C address is 0x3F, the LCD has 2 rows of 16 columns or characters
 
 //FUNCTIONS
 void Decoder();
@@ -33,7 +33,7 @@ const int GearUp = 8;
 const int GearDown = 9;
 const int IRpin = 10;
 
-const int JoystickXAxis = A14;
+//const int JoystickXAxis = A14;
 const int JoystickYAxis = A15;
 
 
@@ -109,7 +109,7 @@ void setup() {
 
 
   //LANDING GEAR SERVO
-  LandingGearServo.attach(6);
+ /* LandingGearServo.attach(6);
   LandingGearCoverServo.attach(7);
 
   pinMode(GearUp, OUTPUT);
