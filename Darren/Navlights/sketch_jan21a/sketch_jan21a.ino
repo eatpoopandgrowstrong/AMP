@@ -1,4 +1,14 @@
+
 #include <IRremote.h>
+
+
+
+
+//functions
+void Decoder();
+void navlights();
+
+
 #define IR1 16724175  //IR1 is for NavLights
 #define IR2 16718055  //IR2 is to toggle the landing gear
 #define IR3 16743045  //IR3 is for Spoilers
@@ -6,12 +16,10 @@
 #define IR5 16726215
 #define IR6 16734885
 
-//functions
-void Decoder();
-void navlights();
+
 
 //LED
-const int IRpin = 8;
+const int IRpin = 11;
 int first_led_pin = 7;
 int second_led_pin = 6;
 int led[] = {0,0};
@@ -77,6 +85,8 @@ void loop()
  Decoder();
  navlights();
 }
+
+
 void Decoder() {
 
   if (irrecv.decode(&results)) {
@@ -110,12 +120,13 @@ void Decoder() {
 
   }
 }
-  void navlights(){
+
+void navlights(){
 
   if(button4==1){
     digitalWrite(first_led_pin, HIGH);
     button4 =0;
   }
    
-  }
+}
   
