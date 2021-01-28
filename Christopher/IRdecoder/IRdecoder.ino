@@ -1,23 +1,16 @@
 #include <IRremote.h>
+int IR_RECEIVE_PIN = 10; // Receive on pin 11
 
-const int IRpin(10);
-
-IRrecv irrecv(IRpin);
-decode_results kappa;
-
-void setup(){
-
-    Serial.begin(9600);
-    irrecv.enableIRIn();
+void setup()
+{
+  Serial.begin(9600);
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
 
 }
-   
-void loop(){
-    if(irrecv.decode(&kappa)){
 
-        Serial.println(kappa.value,DEC);
-        
-        irrecv.resume();
-
-    }
+void loop() {
+  if (IrReceiver.decode()) {
+    IrReceiver.printIRResultShort(&Serial);
+    IrReceiver.resume(); // Continue receiving
+  }
 }
