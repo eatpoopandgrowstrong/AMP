@@ -12,6 +12,12 @@
 void Decoder();
 void Spoilers();
 void LandingGear();
+void Navlights();
+void StrobeLights();
+void StrobeLightDecoder();
+void StrobeLightAction();
+
+
 
 
 
@@ -40,7 +46,8 @@ int button7=0;
 int button8=0;
 int button9=0;
 
-const int Navlights=22;
+const int NavLED=22;
+const int StrobeLEDs=21;
 
 
 /*PINS SET UP
@@ -74,6 +81,17 @@ unsigned long GearCoverInterval = 1000;       //interval between cover and the l
 int LandingGearStatus = 1;
 
 int landing = 0;
+
+//Navlights
+
+//StrobeLights
+
+int StrobeOnOff = 0;
+unsigned long PreviousStrobeMillis=0;
+unsigned long StrobeInterval=1000;
+
+int StrobeStatus=0;
+
 
 
 void setup() {
@@ -111,6 +129,11 @@ void loop() {
 
   Spoilers(); 
   LandingGear();
+  Navlights();
+  StrobeLights();
+  StrobeLightDecoder();
+  StrobeLightAction();
+  
 
 }
 
@@ -302,13 +325,47 @@ void LandingGear() {
 void Spoilers(){
   
 }
-void Navlight(){
+
+void Navlights(){
   if(button6 ==1){
-  digitalwrite(Navlights,HIGH);
+  digitalWrite(NavLED,HIGH);
   button6 = 0;}
   else{
-    digitalwrite(Navlights,LOW);
+    digitalWrite(NavLED,LOW);
    button6 = 0;
   }
+
+}
+ void StrobelightDecoder(){
+  if(button7 ==1){
+    if(StrobeStatus==0){
+      StrobeStatus=1;
+    }
+  else if(button7 ==0){
+      if(StrobeStatus==1){
+        StrobeStatus=0;}
+      }
+          }
+    
+    
+ }
   
+void StrobeLightAction(){
+  if(CurrentMillis - PreviousStrobeMillis >= StrobeInterval){
+    PreviousStrobeMillis = CurrentMillis;
+  if(StrobeStatus == 1){
+
+    if(StrobeOnOff==0){
+      digitalWrite(StrobeLEDs,HIGH);
+      StrobeOnOff = 1;
+    }
+    else if (StrobeOnOff == 1){
+      digitalWrite(StrobeLEDs, LOW);
+      StrobeOnOff = 0;
+    
+    
+  }
+
+  }  
+  }
 }
