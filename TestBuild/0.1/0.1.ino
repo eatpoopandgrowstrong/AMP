@@ -12,8 +12,7 @@
 void Decoder();
 void Spoilers();
 void LandingGear();
-void Navlights();
-void StrobeLights();
+void Navlights();s
 void StrobeLightDecoder();
 void StrobeLightAction();
 
@@ -336,7 +335,7 @@ void Navlights(){
   }
 
 }
- void StrobelightDecoder(){
+ void StrobeLightDecoder(){
   if(button7 ==1){
     if(StrobeStatus==0){
       StrobeStatus=1;
