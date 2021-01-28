@@ -11,6 +11,7 @@
 
 void Decoder();
 void Spoilers();
+void LandingGear();
 
 
 
@@ -26,28 +27,42 @@ void Spoilers();
 #define IRButton8 0x52
 #define IRButton9 0x4A
 
-//PINS SET UP
+
+//Buttons
+
+int button1=0;
+int button2=0;
+int button3=0;
+int button4=0;
+int button5=0;
+int button6=0;
+int button7=0;
+int button8=0;
+int button9=0;
+
+/*PINS SET UP
+
+List of Pins
+
+
+
+*/
+
+//millis
+
+unsigned long CurrentMillis;
 
 //IR Pin
 const int IR_RECEIVE_PIN = 10;
 
-//Buttons
 
-const int Button1=0;
-const int Button2=0;
-const int Button3=0;
-const int Button4=0;
-const int Button5=0;
-const int Button6=0;
-const int Button7=0;
-const int Button8=0;
-const int Button9=0;
 
 
 
 //LANDING GEAR
 Servo LandingGearServo;
 Servo LandingGearCoverServo;
+
 
 int LandingGearCoverStatus = 0;
 unsigned long PreviousGearCoverMillis = 0;
@@ -68,8 +83,10 @@ void setup() {
   //IR SetUp
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definitiona
 
-  //
-
+  //Landing Gear
+  
+  LandingGearServo.attach(7);
+  LandingGearServo.attach(8);
   
 
 
@@ -80,6 +97,8 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
+  CurrentMillis = millis();
+
   Decoder();
 
 
@@ -88,6 +107,7 @@ void loop() {
   
 
   Spoilers(); 
+  LandingGear();
 
 }
 
@@ -136,7 +156,7 @@ void Decoder(){
 
 void LandingGear() {
 
-  if (button1 == 1) {
+  if (button2 == 1) {
     /*
       Landing Gear is being extended down
       Note: this blob of spaghetti code is in need of some serious refactoring, consider using switch?
