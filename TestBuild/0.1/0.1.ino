@@ -3,19 +3,26 @@
 #include <IRremote.h>
 #include <Servo.h>
 #include<Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DHT.h>
+#include <Adafruit_Sensor.h>
 
-
-
+#define DHTPIN 6
+#define DHTTYPE DHT11
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 16, 2);
+DHT dht(DHTPIN, DHTTYPE);
 
 //FUNCTIONS
 
 void Decoder();
 void Spoilers();
 void LandingGear();
-void Navlights();s
+void Navlights();
 void StrobeLightDecoder();
 void StrobeLightAction();
-
+void Temp();
+void LCD();
+void Potentiometer();
 
 
 
@@ -65,9 +72,6 @@ unsigned long CurrentMillis;
 const int IR_RECEIVE_PIN = 10;
 
 
-
-
-
 //LANDING GEAR
 Servo LandingGearServo;
 Servo LandingGearCoverServo;
@@ -92,6 +96,22 @@ unsigned long StrobeInterval=1000;
 int StrobeStatus=0;
 
 
+//DHT11
+unsigned long TempInterval = 500;
+unsigned long PreviousTempMillis;
+double h;
+double t;
+
+//LCD
+unsigned long LCDInterval = 1000;
+unsigned long PreviousLCDMillis;
+int LCDPage;
+int PreviousPage;
+int outputValue=0;
+
+//Potentiometer
+int sensorPin = A0;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -107,9 +127,16 @@ void setup() {
   
   LandingGearServo.attach(7);
   LandingGearServo.attach(8);
-  
 
+  //LCD Backlight
+  lcd.init(); //INITIALISE THE LCD
+  lcd.backlight(); //SWITCH ON THE BACKLIGHT
 
+  //Initialise Potentiometer  
+  pinMode(sensorPin,INPUT);
+
+  //Initialise DHT11
+  dht.begin();
   
   
 }
@@ -129,10 +156,12 @@ void loop() {
   Spoilers(); 
   LandingGear();
   Navlights();
-  StrobeLights();
+  //StrobeLights();
   StrobeLightDecoder();
   StrobeLightAction();
-  
+  LCD();
+  Temp();
+  Potentiometer();
 
 }
 
@@ -368,3 +397,77 @@ void StrobeLightAction(){
   }  
   }
 }
+
+void LCD(){
+
+  if(CurrentMillis-PreviousLCDMillis>=LCDInterval){
+  }  
+  /*if(button5 == 1){
+    LCDPage=1;
+  }
+  if(button6 == 1){
+    LCDPage=2;
+  } */
+  LCDPage = 1;
+    //if(temperature<15)
+      //LCDPage=1;
+      switch(LCDPage){
+      case 1:
+      //if(PreviousPage!=1){
+      //lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Temp:");
+      lcd.print(t);
+      //Serial.println(t);
+      lcd.setCursor(0,1);
+      lcd.print("Humidity:");
+      lcd.print(h);
+      //LCDPage++;
+      Serial.println(LCDPage);
+      PreviousPage=1;
+      //}
+      break;
+
+      case 2:
+      //if(PreviousPage!=2){
+      //lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Engine Temp:");
+      lcd.print(outputValue);
+      lcd.print("C");
+      lcd.setCursor(0,1);
+      lcd.print("             ");
+      //LCDPage++;
+      //Serial.println(LCDPage);
+      PreviousPage=2;
+      //}
+      break;
+
+      /*case 3:
+      if(PreviousPage!=3){
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Hot Temp");
+      lcd.setCursor(0,1);
+      lcd.print("Caution, fire!!");
+      //LCDPage=1;
+      Serial.println(LCDPage);
+      PreviousPage=3;
+      }
+      break; */
+    }
+}
+
+void Temp(){
+  if(CurrentMillis-PreviousTempMillis>=TempInterval){
+  h = dht.readHumidity();
+  t = dht.readTemperature();
+  }
+}
+
+void Potentiometer(){
+  int analogValue = analogRead(sensorPin);
+  //Serial.println(analogValue);
+  outputValue = map (analogValue, 0, 1023, 300, 800);
+  //Serial.println(outputValue);
+  }
