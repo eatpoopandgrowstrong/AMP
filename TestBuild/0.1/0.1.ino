@@ -40,6 +40,9 @@ int button7=0;
 int button8=0;
 int button9=0;
 
+const int Navlights=22;
+
+
 /*PINS SET UP
 
 List of Pins
@@ -301,11 +304,11 @@ void Spoilers(){
 }
 void Navlight(){
   if(button6 ==1){
-  digitalwrite(7,HIGH);
+  digitalwrite(Navlights,HIGH);
   button6 = 0;}
   else{
-    digitalwrite(7,LOW);
-    
+    digitalwrite(Navlights,LOW);
+   button6 = 0;
   }
   
 }
