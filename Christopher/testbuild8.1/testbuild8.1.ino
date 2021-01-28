@@ -17,6 +17,7 @@ void Elevator();
 void Ailerons();
 void Spoilers();
 void TemperatureHumidity();
+void Rudder();
 
 //DEFINING IR NUMBERS
 #define IR1 16724175  //IR1 is for NavLights
@@ -35,6 +36,8 @@ const int IRpin = 10;
 
 const int JoystickXAxis = A14;
 const int JoystickYAxis = A15;
+
+const int RudderAxis = A10; //Placeholder
 
 
 //millis
@@ -95,6 +98,10 @@ uint32_t delayMS;
 Servo LeftSpoilerServo1;
 Servo LeftSpoilerServo2;
 
+//Rudder
+Servo RudderServo1;
+
+
 void setup() {
   // put your setup code here, to run once:
 
@@ -138,6 +145,10 @@ void setup() {
   LeftSpoilerServo1.write(180);
   LeftSpoilerServo2.write(180);
 
+  //Rudder
+  RudderServo1.attach(13);
+  
+
 }
 
 void loop() {
@@ -159,6 +170,7 @@ void loop() {
   Ailerons();
   Spoilers();
   TemperatureHumidity();
+  Rudder();
 }
 
 
@@ -394,7 +406,13 @@ void TemperatureHumidity (void){
 
 }
 
+void Rudder(void){
+  
+  RudderAxisRaw = analogRead(RudderAxis);
+  RudderAxisMapped = map(RudderAxisRaw, 0, 1023, 0, 180);
 
+  RudderServo.write(RudderAxisMapped);                 
+}
 
 /*
     What we can do:

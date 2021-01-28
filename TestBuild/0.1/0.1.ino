@@ -299,3 +299,13 @@ void LandingGear() {
 void Spoilers(){
   
 }
+void Navlight(){
+  if(button6 ==1){
+  digitalwrite(7,HIGH);
+  button6 = 0;}
+  else{
+    digitalwrite(7,LOW);
+    
+  }
+  
+}
