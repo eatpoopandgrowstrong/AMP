@@ -25,6 +25,7 @@ void StrobeLightAction();
 void Temp();
 void LCD();
 void Potentiometer();
+void Rudder();
 
 
 
@@ -54,10 +55,16 @@ int button7=0;
 int button8=0;
 int button9=0;
 
+
+//LightsLED
 const int NavLED=22;
 const int StrobeLEDs=21;
 const int LogoLED=20;
 const int LandingLED=19;
+
+
+//Rudder Pin
+const int RudderAxis = A10;//Placeholder
 
 
 /*PINS SET UP
@@ -79,6 +86,9 @@ const int IR_RECEIVE_PIN = 10;
 //LANDING GEAR
 Servo LandingGearServo;
 Servo LandingGearCoverServo;
+
+//Rudder
+Servo RudderServo1;
 
 
 int LandingGearCoverStatus = 0;
@@ -145,6 +155,9 @@ void setup() {
 
   //Initialise DHT11
   dht.begin();
+
+  //Rudder
+  RudderServo1.attach(13);
   
   
 }
@@ -171,6 +184,7 @@ void loop() {
   LCD();
   Temp();
   Potentiometer();
+  Rudder();
 
 }
 
@@ -498,3 +512,14 @@ void Potentiometer(){
   outputValue = map (analogValue, 0, 1023, 300, 800);
   //Serial.println(outputValue);
   }
+
+void Rudder(){
+
+
+RudderAxisRaw=analogRead(RudderAxis);
+RudderAxisMapped=map(RudderAxisRaw, 0,1023, 0, 180);
+RudderServo,write(RudderAxisMapped);
+
+
+
+}
