@@ -18,6 +18,8 @@ void Decoder();
 void Spoilers();
 void LandingGear();
 void Navlights();
+void LogoLights();
+void LandingLights();
 void StrobeLightDecoder();
 void StrobeLightAction();
 void Temp();
@@ -54,6 +56,8 @@ int button9=0;
 
 const int NavLED=22;
 const int StrobeLEDs=21;
+const int LogoLED=20;
+const int LandingLED=19;
 
 
 /*PINS SET UP
@@ -86,6 +90,10 @@ int LandingGearStatus = 1;
 int landing = 0;
 
 //Navlights
+
+//LogoLights
+
+//LandingLights
 
 //StrobeLights
 
@@ -156,7 +164,8 @@ void loop() {
   Spoilers(); 
   LandingGear();
   Navlights();
-  //StrobeLights();
+  LogoLights();
+  LandingLights();
   StrobeLightDecoder();
   StrobeLightAction();
   LCD();
@@ -361,6 +370,24 @@ void Navlights(){
   else{
     digitalWrite(NavLED,LOW);
    button6 = 0;
+  }
+  
+  void LogoLights(){
+  if(button8 ==1){
+  digitalWrite(LogoLED,HIGH);
+  button8 = 0;}
+  else{
+    digitalWrite(LogoLED,LOW);
+   button8 = 0;
+  }
+
+  void LandingLights(){
+  if(button8 ==1){
+  digitalWrite(LandingLED,HIGH);
+  button9 = 0;}
+  else{
+    digitalWrite(LAndingLED,LOW);
+   button9 = 0;
   }
 
 }
