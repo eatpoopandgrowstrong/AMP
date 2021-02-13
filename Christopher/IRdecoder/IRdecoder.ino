@@ -1,5 +1,5 @@
 #include <IRremote.h>
-int IR_RECEIVE_PIN = 10; // Receive on pin 11
+int IR_RECEIVE_PIN = 9; // Receive on pin 11
 
 void setup()
 {
@@ -11,6 +11,7 @@ void setup()
 void loop() {
   if (IrReceiver.decode()) {
     IrReceiver.printIRResultShort(&Serial);
+    
     IrReceiver.resume(); // Continue receiving
   }
 }

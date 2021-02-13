@@ -3,14 +3,14 @@
 #include <IRremote.h>
 #include <Servo.h>
 #include<Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <DHT.h>
-#include <Adafruit_Sensor.h>
+//#include <LiquidCrystal_I2C.h>
+//#include <DHT.h>
+//#include <Adafruit_Sensor.h>
 
 #define DHTPIN 6
 #define DHTTYPE DHT11
-LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 16, 2);
-DHT dht(DHTPIN, DHTTYPE);
+//LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 16, 2);
+//DHT dht(DHTPIN, DHTTYPE);
 
 //FUNCTIONS
 
@@ -147,14 +147,14 @@ void setup() {
   LandingGearServo.attach(8);
 
   //LCD Backlight
-  lcd.init(); //INITIALISE THE LCD
-  lcd.backlight(); //SWITCH ON THE BACKLIGHT
+  //lcd.init(); //INITIALISE THE LCD
+  //lcd.backlight(); //SWITCH ON THE BACKLIGHT
 
   //Initialise Potentiometer  
   pinMode(sensorPin,INPUT);
 
   //Initialise DHT11
-  dht.begin();
+  //dht.begin();
 
   //Rudder
   RudderServo1.attach(13);
@@ -385,7 +385,7 @@ void Navlights(){
     digitalWrite(NavLED,LOW);
    button6 = 0;
   }
-  
+}
   void LogoLights(){
   if(button8 ==1){
   digitalWrite(LogoLED,HIGH);
@@ -394,13 +394,14 @@ void Navlights(){
     digitalWrite(LogoLED,LOW);
    button8 = 0;
   }
+  }
 
   void LandingLights(){
   if(button8 ==1){
   digitalWrite(LandingLED,HIGH);
   button9 = 0;}
   else{
-    digitalWrite(LAndingLED,LOW);
+    digitalWrite(LandingLED,LOW);
    button9 = 0;
   }
 
@@ -438,7 +439,7 @@ void StrobeLightAction(){
   }  
   }
 }
-
+/*
 void LCD(){
 
   if(CurrentMillis-PreviousLCDMillis>=LCDInterval){
@@ -483,7 +484,7 @@ void LCD(){
       PreviousPage=2;
       //}
       break;
-
+*/
       /*case 3:
       if(PreviousPage!=3){
       lcd.clear();
@@ -498,28 +499,27 @@ void LCD(){
       break; */
     }
 }
-
+/*
 void Temp(){
   if(CurrentMillis-PreviousTempMillis>=TempInterval){
   h = dht.readHumidity();
   t = dht.readTemperature();
   }
 }
-
+*/
+/*
 void Potentiometer(){
   int analogValue = analogRead(sensorPin);
   //Serial.println(analogValue);
   outputValue = map (analogValue, 0, 1023, 300, 800);
   //Serial.println(outputValue);
   }
-
+/*
 void Rudder(){
-
 
 RudderAxisRaw=analogRead(RudderAxis);
 RudderAxisMapped=map(RudderAxisRaw, 0,1023, 0, 180);
 RudderServo,write(RudderAxisMapped);
 
-
-
 }
+*/
